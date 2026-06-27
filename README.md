@@ -45,10 +45,10 @@ Only these six endpoints are intentionally supported.
 ## Installation
 
 ```bash
-pip install requests
+pip install git+https://github.com/W-Yuya/python-minimal-lastfm-client.git
 ```
 
-Clone this repository and add the project root to your Python path, or place `lastfm_client/` alongside your script.
+Or clone the repository and add the project root to your Python path.
 
 ---
 
