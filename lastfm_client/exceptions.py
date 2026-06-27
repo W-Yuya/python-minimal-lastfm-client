@@ -14,7 +14,10 @@ Hierarchy::
     │   └── APIError
     │       ├── AuthenticationError
     │       ├── RateLimitError
-    │       └── NotFoundError
+    │       ├── InvalidRequestError
+    │       ├── InvalidParametersError
+    │       ├── ServiceError
+    │       └── SuspendedError
     └── ResponseError
 """
 
@@ -105,9 +108,42 @@ class APIError(ClientError):
 
 class AuthenticationError(APIError):
     """
-    Raised when the API key is missing, invalid, or suspended.
+    Raised when authentication fails or the session/key is invalid.
 
-    Corresponds to Last.fm API error code 4.
+    Corresponds to Last.fm API error codes 4, 9, and 10.
+    """
+
+
+class InvalidRequestError(APIError):
+    """
+    Raised when the request is malformed or unsupported.
+
+    Covers invalid service, method, format, resource, or signature.
+    Corresponds to Last.fm API error codes 2, 3, 5, 7, and 13.
+    """
+
+
+class InvalidParametersError(APIError):
+    """
+    Raised when a required parameter is missing or invalid.
+
+    Corresponds to Last.fm API error code 6.
+    """
+
+
+class ServiceError(APIError):
+    """
+    Raised when the Last.fm service is temporarily unavailable.
+
+    Corresponds to Last.fm API error codes 8, 11, and 16.
+    """
+
+
+class SuspendedError(APIError):
+    """
+    Raised when the API key has been suspended.
+
+    Corresponds to Last.fm API error code 26.
     """
 
 
@@ -116,14 +152,6 @@ class RateLimitError(APIError):
     Raised when the request rate limit has been exceeded.
 
     Corresponds to Last.fm API error code 29.
-    """
-
-
-class NotFoundError(APIError):
-    """
-    Raised when the requested resource does not exist.
-
-    Corresponds to Last.fm API error code 6.
     """
 
 

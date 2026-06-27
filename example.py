@@ -25,7 +25,10 @@ from lastfm_client import LastFMClient
 from lastfm_client.exceptions import (
     AuthenticationError,
     LastFMClientError,
-    NotFoundError,
+    InvalidRequestError,
+    InvalidParametersError,
+    ServiceError,
+    SuspendedError,
     RateLimitError,
 )
 
@@ -148,8 +151,14 @@ def main() -> None:
         print("Authentication failed. Check that LASTFM_API_KEY is correct.")
     except RateLimitError:
         print("Rate limit exceeded. Wait a moment and try again.")
-    except NotFoundError as e:
-        print(f"Resource not found: {e}")
+    except InvalidRequestError:
+        print("Invalid request. Please check your parameters.")
+    except InvalidParametersError:
+        print("Invalid parameters. Please check your input.")
+    except ServiceError:
+        print("Last.fm service is temporarily unavailable.")
+    except SuspendedError:
+        print("Your API key has been suspended.")
     except LastFMClientError as e:
         print(f"{type(e).__name__}: {e}")
 

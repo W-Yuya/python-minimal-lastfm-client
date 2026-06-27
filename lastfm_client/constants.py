@@ -7,8 +7,11 @@ defined here so they have a single source of truth.
 
 from .exceptions import (
     AuthenticationError,
-    NotFoundError,
+    InvalidParametersError,
+    InvalidRequestError,
     RateLimitError,
+    ServiceError,
+    SuspendedError,
 )
 
 # ---------------------------------------------------------------------------
@@ -65,7 +68,18 @@ ENV_API_KEY = "LASTFM_API_KEY"
 #:
 #: Reference: https://www.last.fm/api/errorcodes
 API_ERROR_MAP = {
+    2:  InvalidRequestError,
+    3:  InvalidRequestError,
     4:  AuthenticationError,
-    6:  NotFoundError,
+    5:  InvalidRequestError,
+    6:  InvalidParametersError,
+    7:  InvalidRequestError,
+    8:  ServiceError,
+    9:  AuthenticationError,
+    10: AuthenticationError,
+    11: ServiceError,
+    13: InvalidRequestError,
+    16: ServiceError,
+    26: SuspendedError,
     29: RateLimitError,
 }

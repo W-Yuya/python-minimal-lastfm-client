@@ -170,7 +170,10 @@ LastFMClientError
 │   └── APIError
 │       ├── AuthenticationError
 │       ├── RateLimitError
-│       └── NotFoundError
+│       ├── InvalidRequestError
+│       ├── InvalidParametersError
+│       ├── ServiceError
+│       └── SuspendedError
 └── ResponseError
 ```
 
@@ -217,14 +220,12 @@ except ClientError as e:
 Last.fm API がエラーコードを返した場合に発生します。既知のコードは専用のサブクラスに対応付けられています。
 
 ```python
-from lastfm_client.exceptions import APIError, AuthenticationError, NotFoundError, RateLimitError
+from lastfm_client.exceptions import APIError, AuthenticationError, RateLimitError
 
 try:
     data = client.artist_get_info("Deep Purple")
 except AuthenticationError as e:
     print(f"[{e.code}] API キーが無効です")
-except NotFoundError as e:
-    print(f"[{e.code}] アーティストが見つかりません")
 except RateLimitError as e:
     print(f"[{e.code}] レート制限を超過しました")
 except APIError as e:
@@ -261,11 +262,22 @@ except LastFMClientError as e:
 
 既知の Last.fm API エラーコードは自動的に専用の例外クラスに対応付けられます。
 
-| API コード | 例外クラス            |
-| ---------: | --------------------- |
-|          4 | `AuthenticationError` |
-|          6 | `NotFoundError`       |
-|         29 | `RateLimitError`      |
+| API コード | 例外クラス               | 説明                                   |
+| ---------: | ------------------------ | -------------------------------------- |
+|          2 | `InvalidRequestError`    | 無効なサービス                         |
+|          3 | `InvalidRequestError`    | 無効なメソッド                         |
+|          4 | `AuthenticationError`    | 認証失敗                               |
+|          5 | `InvalidRequestError`    | 無効なフォーマット                     |
+|          6 | `InvalidParametersError` | パラメータが不足または無効             |
+|          7 | `InvalidRequestError`    | 無効なリソース                         |
+|          8 | `ServiceError`           | 操作失敗                               |
+|          9 | `AuthenticationError`    | 無効なセッションキー                   |
+|         10 | `AuthenticationError`    | 無効な API キー                        |
+|         11 | `ServiceError`           | サービスが一時的にオフライン           |
+|         13 | `InvalidRequestError`    | 無効なメソッドシグネチャ               |
+|         16 | `ServiceError`           | リクエストの一時的な処理エラー         |
+|         26 | `SuspendedError`         | API キーが停止されています             |
+|         29 | `RateLimitError`         | レート制限を超過                       |
 
 未知のエラーコードは `APIError` として送出されます。対応表は `constants.py` で管理されています。
 

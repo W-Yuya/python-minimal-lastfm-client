@@ -170,7 +170,10 @@ LastFMClientError
 │   └── APIError
 │       ├── AuthenticationError
 │       ├── RateLimitError
-│       └── NotFoundError
+│       ├── InvalidRequestError
+│       ├── InvalidParametersError
+│       ├── ServiceError
+│       └── SuspendedError
 └── ResponseError
 ```
 
@@ -217,14 +220,12 @@ except ClientError as e:
 Raised when the Last.fm API returns an error code. Known codes are mapped to dedicated subclasses.
 
 ```python
-from lastfm_client.exceptions import APIError, AuthenticationError, NotFoundError, RateLimitError
+from lastfm_client.exceptions import APIError, AuthenticationError, RateLimitError
 
 try:
     data = client.artist_get_info("Deep Purple")
 except AuthenticationError as e:
     print(f"[{e.code}] Invalid API key")
-except NotFoundError as e:
-    print(f"[{e.code}] Artist not found")
 except RateLimitError as e:
     print(f"[{e.code}] Rate limit exceeded")
 except APIError as e:
@@ -261,11 +262,22 @@ except LastFMClientError as e:
 
 Known Last.fm API error codes are automatically mapped to dedicated exception classes.
 
-| API Code | Exception             |
-| -------: | --------------------- |
-|        4 | `AuthenticationError` |
-|        6 | `NotFoundError`       |
-|       29 | `RateLimitError`      |
+| API Code | Exception                | Description                              |
+| -------: | ------------------------ | ---------------------------------------- |
+|        2 | `InvalidRequestError`    | Invalid service                          |
+|        3 | `InvalidRequestError`    | Invalid method                           |
+|        4 | `AuthenticationError`    | Authentication failed                    |
+|        5 | `InvalidRequestError`    | Invalid format                           |
+|        6 | `InvalidParametersError` | Missing or invalid parameter             |
+|        7 | `InvalidRequestError`    | Invalid resource specified               |
+|        8 | `ServiceError`           | Operation failed                         |
+|        9 | `AuthenticationError`    | Invalid session key                      |
+|       10 | `AuthenticationError`    | Invalid API key                          |
+|       11 | `ServiceError`           | Service temporarily offline              |
+|       13 | `InvalidRequestError`    | Invalid method signature                 |
+|       16 | `ServiceError`           | Temporary error processing your request  |
+|       26 | `SuspendedError`         | API key suspended                        |
+|       29 | `RateLimitError`         | Rate limit exceeded                      |
 
 Unknown API errors are raised as `APIError`. The mapping is maintained in `constants.py`.
 
