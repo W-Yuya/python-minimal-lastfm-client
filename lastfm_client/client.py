@@ -323,6 +323,7 @@ class LastFMClient:
     def track_search(
         self,
         track: str,
+        artist: str | None = None,
         limit: int = DEFAULT_LIMIT,
         page: int = DEFAULT_PAGE,
     ) -> dict:
@@ -335,6 +336,8 @@ class LastFMClient:
         ----------
         track : str
             Track title to search for.
+        artist : str | None, optional
+            Artist name to filter by.
         limit : int, optional
             Number of results per page.  Must be between 1 and ``MAX_LIMIT``.
             Defaults to ``DEFAULT_LIMIT``.
@@ -367,9 +370,20 @@ class LastFMClient:
         ...     print(item["name"], "-", item["artist"])
         """
         self._validate_string(track, "track")
+        if artist is not None:
+            self._validate_string(artist, "artist")
         self._validate_positive_int(limit, "limit", max_value=MAX_LIMIT)
         self._validate_positive_int(page, "page", max_value=MAX_PAGE)
 
+        if artist is not None:
+            return self._request(
+                "track.search",
+                track=track,
+                artist=artist,
+                limit=limit,
+                page=page,
+            )
+        
         return self._request(
             "track.search",
             track=track,
