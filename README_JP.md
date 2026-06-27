@@ -45,10 +45,10 @@ Last.fm Web API の軽量 Python クライアントです。
 ## インストール
 
 ```bash
-pip install requests
+pip install git+https://github.com/W-Yuya/python-minimal-lastfm-client.git
 ```
 
-このリポジトリをクローンし、プロジェクトルートを Python パスに追加するか、`lastfm_client/` をスクリプトと同じディレクトリに配置してください。
+またはリポジトリをクローンし、プロジェクトルートを Python パスに追加してください。
 
 ---
 
