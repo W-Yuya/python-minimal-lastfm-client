@@ -72,7 +72,7 @@ class LastFMClient:
     # Public API
     # ---------------------------------------------------------------------------
 
-    def artist_get_info(self, artist: str) -> dict:
+    def artist_get_info(self, artist: str, mbid: str|None = None) -> dict:
         """
         Fetch metadata for an artist.
 
@@ -82,6 +82,9 @@ class LastFMClient:
         ----------
         artist : str
             Artist name.
+        mbid : str or None, optional
+            MusicBrainz ID for the artist.  
+            If provided, this will be used instead of the artist name.
 
         Returns
         -------
@@ -107,12 +110,20 @@ class LastFMClient:
         >>> data["artist"]["name"]
         'Deep Purple'
         """
-        self._validate_string(artist, "artist")
+        if mbid is not None:
+            self._validate_string(mbid, "mbid")
 
-        return self._request(
-            "artist.getInfo",
-            artist=artist,
-        )
+            return self._request(
+                "artist.getInfo",
+                mbid=mbid,
+            )
+        else:
+            self._validate_string(artist, "artist")
+
+            return self._request(
+                "artist.getInfo",
+                artist=artist,
+            )
 
     def artist_search(
         self,
@@ -171,7 +182,7 @@ class LastFMClient:
             page=page,
         )
 
-    def album_get_info(self, artist: str, album: str) -> dict:
+    def album_get_info(self, artist: str, album: str, mbid: str|None = None) -> dict:
         """
         Fetch metadata for an album.
 
@@ -183,6 +194,9 @@ class LastFMClient:
             Artist name.
         album : str
             Album title.
+        mbid : str or None, optional
+            MusicBrainz ID for the album.
+            If provided, this will be used instead of the artist and album names.
 
         Returns
         -------
@@ -208,14 +222,23 @@ class LastFMClient:
         >>> data["album"]["name"]
         'Machine Head'
         """
-        self._validate_string(artist, "artist")
-        self._validate_string(album, "album")
 
-        return self._request(
-            "album.getInfo",
-            artist=artist,
-            album=album,
-        )
+        if mbid is not None:
+            self._validate_string(mbid, "mbid")
+
+            return self._request(
+                "album.getInfo",
+                mbid=mbid,
+            )
+        else:
+            self._validate_string(artist, "artist")
+            self._validate_string(album, "album")
+
+            return self._request(
+                "album.getInfo",
+                artist=artist,
+                album=album,
+            )
 
     def album_search(
         self,
@@ -274,7 +297,7 @@ class LastFMClient:
             page=page,
         )
 
-    def track_get_info(self, artist: str, track: str) -> dict:
+    def track_get_info(self, artist: str, track: str, mbid: str | None = None) -> dict:
         """
         Fetch metadata for a track.
 
@@ -286,7 +309,9 @@ class LastFMClient:
             Artist name.
         track : str
             Track title.
-
+        mbid : str | None, optional
+            Track MBID.
+            If provided, this will be used instead of the artist and track names.
         Returns
         -------
         dict
@@ -311,14 +336,22 @@ class LastFMClient:
         >>> data["track"]["listeners"]
         '1234567'
         """
-        self._validate_string(artist, "artist")
-        self._validate_string(track, "track")
+        if mbid is not None:
+            self._validate_string(mbid, "mbid")
 
-        return self._request(
-            "track.getInfo",
-            artist=artist,
-            track=track,
-        )
+            return self._request(
+                "track.getInfo",
+                mbid=mbid,
+            )
+        else:
+            self._validate_string(artist, "artist")
+            self._validate_string(track, "track")
+
+            return self._request(
+                "track.getInfo",
+                artist=artist,
+                track=track,
+            )
 
     def track_search(
         self,
